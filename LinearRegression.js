@@ -1,4 +1,3 @@
-<script type="text/javascript">
 
 function LinearRegression (theta, theta1, alpha, iterations) {
     this.initial_theta = [theta, theta1];
@@ -70,5 +69,3 @@ for (var t=1; t<10; t++)
 
     console.log( 'For Value: ', test, ' Predicted: ', prediction );
 }
-
-</script>

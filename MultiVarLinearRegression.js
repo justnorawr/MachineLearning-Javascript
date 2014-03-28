@@ -1,5 +1,3 @@
-<script type="text/javascript">
-
 function MultiVarLinearRegression (theta, theta1, alpha, iterations) {
     this.initial_theta = [theta, theta1, theta1];
     this.alpha = alpha;
@@ -95,5 +93,3 @@ for (var t=0; t<15; t++)
     first = Math.round(second);
     second = Math.round(prediction);
 }
-
-</script>
