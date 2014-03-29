@@ -17,7 +17,7 @@
 				];
 
 				// theta0, theta1, alpha, iterations
-				var LRModel = new LinearRegression(0, .1, .01, 50);
+				var LRModel = new LinearRegression(0, .1, .01, 1000);
 
 				LRModel.train(features, targets);
 
@@ -38,13 +38,13 @@
 				chart.draw(data, options);
 
 				var costDataArray = [['Theta', 'Cost']];
-				for (var i=-500; i<500; i+=50)
+				for (var i=-100; i<100; i+=3)
 				{
-					costDataArray.push( [LRModel.computeCost([0, i], features[1], targets[1]), i] );
+					costDataArray.push( [i, LRModel.computeCost([0, i], features[5], targets[5])] );
 				}
 
 				var data = google.visualization.arrayToDataTable(costDataArray);
-				var options = {curveType: "function", title:'Cost Function', width:600, height:300};
+				var options = {xAxis: {maxValue: 100}, vAxis: {maxValue: 100}, curveType: "function", title:'Cost Function', width:600, height:300};
 				var chart = new google.visualization.ScatterChart(document.getElementById('chart_cost'));
 				chart.draw(data, options);
 			}

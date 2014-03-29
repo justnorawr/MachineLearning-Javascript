@@ -31,7 +31,7 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 			h += this.theta[k] * x[k];
 		}
 
-		return 1/x.length + (h-y);
+		return 1/x.length + ( (h-y) * (h-y) );
 	}
 
 	this.buildTheta = function (features) {
