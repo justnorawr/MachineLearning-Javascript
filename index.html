@@ -1,0 +1,59 @@
+<html>
+	<head>
+		<script type="text/javascript" src="LinearRegression.js"></script>
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+		<script type="text/javascript">
+			// Load the Visualization API and the piechart package.
+			google.load('visualization', '1.0', {'packages':['corechart']});
+
+			function initialize ()
+			{	
+				var features = [
+					[0, 3], [0, 5], [0, 8], [0, 120], [0, 100], [0, 90], [0, 7], [0, 10], [0, 4]
+				];
+				var targets = [
+					9, 15, 24, 360, 300, 270, 21, 30, 12
+				];
+
+				// theta0, theta1, alpha, iterations
+				var LRModel = new LinearRegression(0, .1, .01, 50);
+
+				LRModel.train(features, targets);
+
+				var costHistory = LRModel.costHistory;
+
+				var dataArray = [['Features', 'Actual Prices', 'Hypothesis']];
+				for (var i=0; i<features.length; i++)
+				{
+					x = features[i][1] + 0;
+					y = targets[i] + 0;
+					hypothesis = costHistory[i].hypothesis + 0;
+					dataArray.push( [x, y, hypothesis] );
+				}
+
+				var data = google.visualization.arrayToDataTable(dataArray);
+				var options = {'title':'Linear Regression', 'width':600, 'height':300};
+				var chart = new google.visualization.ScatterChart(document.getElementById('chart_lr'));
+				chart.draw(data, options);
+
+				var costDataArray = [['Theta', 'Cost']];
+				for (var i=-500; i<500; i+=50)
+				{
+					costDataArray.push( [LRModel.computeCost([0, i], features[1], targets[1]), i] );
+				}
+
+				var data = google.visualization.arrayToDataTable(costDataArray);
+				var options = {curveType: "function", title:'Cost Function', width:600, height:300};
+				var chart = new google.visualization.ScatterChart(document.getElementById('chart_cost'));
+				chart.draw(data, options);
+			}
+		</script>
+	</head>
+
+	<body onLoad="initialize()">
+		<div id="chart_lr"></div>
+		<div id="chart_cost"></div>
+		<div id="chart_predictions"></div>
+	</body>
+</html>
