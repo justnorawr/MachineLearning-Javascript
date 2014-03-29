@@ -3,12 +3,17 @@
 		<script type="text/javascript" src="LinearRegression.js"></script>
 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
+		<style type="text/css">
+			.chart { float: left; }
+		</style>
+
 		<script type="text/javascript">
 			// Load the Visualization API and the piechart package.
 			google.load('visualization', '1.0', {'packages':['corechart']});
 
 			function initialize ()
 			{	
+				// define our data set
 				var features = [
 					[0, 3], [0, 5], [0, 8], [0, 120], [0, 100], [0, 90], [0, 7], [0, 10], [0, 4]
 				];
@@ -17,43 +22,58 @@
 				];
 
 				// theta0, theta1, alpha, iterations
-				var LRModel = new LinearRegression(0, .1, .01, 1000);
+				var LRModel = new LinearRegression(0, .1, .1, 10);
 
+				// train linear regression
 				LRModel.train(features, targets);
 
-				var costHistory = LRModel.costHistory;
-
+				// create google chart data array for hypothesis function
 				var dataArray = [['Features', 'Actual Prices', 'Hypothesis']];
 				for (var i=0; i<features.length; i++)
 				{
 					x = features[i][1] + 0;
 					y = targets[i] + 0;
-					hypothesis = costHistory[i].hypothesis + 0;
+					hypothesis = LRModel.hypothesis[i] + 0;
 					dataArray.push( [x, y, hypothesis] );
 				}
 
+				// create google chart for price v prediction scatter plot
 				var data = google.visualization.arrayToDataTable(dataArray);
 				var options = {'title':'Linear Regression', 'width':600, 'height':300};
 				var chart = new google.visualization.ScatterChart(document.getElementById('chart_lr'));
 				chart.draw(data, options);
 
+				// create google chart for price v prediction line graph
+				var chart = new google.visualization.LineChart(document.getElementById('chart_lr_line'));
+				chart.draw(data, options);
+
+				// buld google chart data array for cost function
 				var costDataArray = [['Theta', 'Cost']];
-				for (var i=-100; i<100; i+=3)
-				{
+				for (var i=-200; i<200; i+=10) {
 					costDataArray.push( [i, LRModel.computeCost([0, i], features[5], targets[5])] );
 				}
 
+				// create google chart for cost function scatter plot
 				var data = google.visualization.arrayToDataTable(costDataArray);
-				var options = {xAxis: {maxValue: 100}, vAxis: {maxValue: 100}, curveType: "function", title:'Cost Function', width:600, height:300};
+				var options = {curveType: "function", title:'Cost Function', width:600, height:300};
 				var chart = new google.visualization.ScatterChart(document.getElementById('chart_cost'));
+				chart.draw(data, options);
+
+				// create google chart for cost function line graph
+				var chart = new google.visualization.LineChart(document.getElementById('chart_cost_line'));
 				chart.draw(data, options);
 			}
 		</script>
 	</head>
 
 	<body onLoad="initialize()">
-		<div id="chart_lr"></div>
-		<div id="chart_cost"></div>
-		<div id="chart_predictions"></div>
+		<div class="chart" id="chart_cost"></div>
+		<div class="chart" id="chart_cost_line"></div>
+		<br style="clear: both;" />
+		<div class="chart" id="chart_lr"></div>
+		<div class="chart" id="chart_lr_line"></div>
+		<br style="clear: both;" />
+		<div class="chart" id="chart_lr_prediction"></div>
+		<div class="chart" id="chart_lr_prediction_line"></div>
 	</body>
 </html>

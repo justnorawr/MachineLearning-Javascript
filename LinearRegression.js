@@ -5,7 +5,7 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 
 	this.train = function (X, Y) {
 		this.theta = this.initial_theta;
-		this.costHistory = [];
+		this.hypothesis = [];
 		this.gradientDescent(X, Y);
 		return true;
 	};
@@ -21,14 +21,15 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 
 	this.computeCost = function (theta, x, y)
 	{
-		this.theta = theta;
-		this.buildTheta(x.length);
+		theta = theta;
+		for (var i=2; i<x.length; i++) {
+			theta[i] = theta[1];
+		}
 
 		var h = 0;
-
 		for (var k=0; k<x.length; k++)
 		{
-			h += this.theta[k] * x[k];
+			h += theta[k] * x[k];
 		}
 
 		return 1/x.length + ( (h-y) * (h-y) );
@@ -47,16 +48,17 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 		// compute one step of gradient descent for each iteration
 		for (var i=0; i<this.iterations; i++) {
 
+			// this will hold theta values for each feature at each step
 			var temp = [];
 
 			// compute cost of each feature
-			// J(j1, j2, j3) = 1/2m( (Theta0 + Theta1*X1 + Theta2*X2) - Y )^2
 			for (var j=0; j<X.length; j++)
 			{
 				var x = X[j];
 				var y = Y[j];
 				var h = 0;
 
+				// calculate sum of all pedictions
 				for (var k=0; k<x.length; k++)
 				{
 					h += this.theta[k] * x[k];
@@ -64,16 +66,15 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 
 				var cost = [];
 				for (var k=0; k<x.length; k++) {
+					// compute partial derivitve for this feature / step
 					cost[k] = (h-y) * x[k];
 					var delta = (1/Y.length) * cost[k];
+
+					// save theta value for this feature
 					temp[k] = this.theta[k] - (this.alpha * delta);
 				}
 
-				this.costHistory[j] = {
-					cost: cost[1] * x[1],
-					theta: temp,
-					hypothesis: h
-				};
+				this.hypothesis[j] = h;
 			}
 
 			// update theta values at this step
