@@ -22,10 +22,43 @@
 				];
 
 				// theta0, theta1, alpha, iterations
-				var LRModel = new LinearRegression(0, .1, .1, 10);
+				var iterations = 225;
+				var LRModel = new LinearRegression(0, .01, .01, iterations);
 
 				// train linear regression
 				LRModel.train(features, targets);
+
+				// buld google chart data array for cost function
+				var costDataArray = [['Theta', 'Cost']];
+				for (var i=-200; i<200; i+=10) {
+					costDataArray.push( [i, LRModel.computeCost([0, i], features[5], targets[5])] );
+				}
+
+				// create google chart for cost function scatter plot
+				var data = google.visualization.arrayToDataTable(costDataArray);
+				var options = {curveType: "function", title:'Cost Function', width:600, height:300};
+				var chart = new google.visualization.ScatterChart(document.getElementById('chart_cost'));
+				chart.draw(data, options);
+
+				// create google chart for cost function line graph
+				var chart = new google.visualization.LineChart(document.getElementById('chart_cost_line'));
+				chart.draw(data, options);
+
+				// buld google chart data array for cost function
+				var gradientDescentArray = [['Iterations', 'Theta']];
+				for (var i=1; i<iterations; i++) {
+					gradientDescentArray.push( [ i, LRModel.theta_history[i][1] ] );
+				}
+
+				// create google chart for cost function scatter plot
+				var data = google.visualization.arrayToDataTable(gradientDescentArray);
+				var options = {curveType: "function", title:'Gradient Descent', width:600, height:300};
+				var chart = new google.visualization.ScatterChart(document.getElementById('chart_gd'));
+				chart.draw(data, options);
+
+				// create google chart for cost function line graph
+				var chart = new google.visualization.LineChart(document.getElementById('chart_gd_line'));
+				chart.draw(data, options);
 
 				// create google chart data array for hypothesis function
 				var dataArray = [['Features', 'Actual Prices', 'Hypothesis']];
@@ -46,22 +79,6 @@
 				// create google chart for price v prediction line graph
 				var chart = new google.visualization.LineChart(document.getElementById('chart_lr_line'));
 				chart.draw(data, options);
-
-				// buld google chart data array for cost function
-				var costDataArray = [['Theta', 'Cost']];
-				for (var i=-200; i<200; i+=10) {
-					costDataArray.push( [i, LRModel.computeCost([0, i], features[5], targets[5])] );
-				}
-
-				// create google chart for cost function scatter plot
-				var data = google.visualization.arrayToDataTable(costDataArray);
-				var options = {curveType: "function", title:'Cost Function', width:600, height:300};
-				var chart = new google.visualization.ScatterChart(document.getElementById('chart_cost'));
-				chart.draw(data, options);
-
-				// create google chart for cost function line graph
-				var chart = new google.visualization.LineChart(document.getElementById('chart_cost_line'));
-				chart.draw(data, options);
 			}
 		</script>
 	</head>
@@ -69,6 +86,9 @@
 	<body onLoad="initialize()">
 		<div class="chart" id="chart_cost"></div>
 		<div class="chart" id="chart_cost_line"></div>
+		<br style="clear: both;" />
+		<div class="chart" id="chart_gd"></div>
+		<div class="chart" id="chart_gd_line"></div>
 		<br style="clear: both;" />
 		<div class="chart" id="chart_lr"></div>
 		<div class="chart" id="chart_lr_line"></div>

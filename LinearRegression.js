@@ -6,6 +6,7 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 	this.train = function (X, Y) {
 		this.theta = this.initial_theta;
 		this.hypothesis = [];
+		this.theta_history = [];
 		this.gradientDescent(X, Y);
 		return true;
 	};
@@ -46,7 +47,7 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 		this.buildTheta(X.length);
 
 		// compute one step of gradient descent for each iteration
-		for (var i=0; i<this.iterations; i++) {
+		for (var i=1; i<this.iterations; i++) {
 
 			// this will hold theta values for each feature at each step
 			var temp = [];
@@ -79,6 +80,7 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 
 			// update theta values at this step
 			this.theta = temp;
+			this.theta_history[i] = temp;
 		}
 	};
 };
