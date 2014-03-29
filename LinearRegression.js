@@ -51,6 +51,7 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 
 			// this will hold theta values for each feature at each step
 			var temp = [];
+			this.theta_history[i] = [];
 
 			// compute cost of each feature
 			for (var j=0; j<X.length; j++)
@@ -76,11 +77,11 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 				}
 
 				this.hypothesis[j] = h;
+				this.theta_history[i] = this.computeCost(this.theta, x, y);
 			}
 
 			// update theta values at this step
 			this.theta = temp;
-			this.theta_history[i] = temp;
 		}
 	};
 };

@@ -22,8 +22,8 @@
 				];
 
 				// theta0, theta1, alpha, iterations
-				var iterations = 225;
-				var LRModel = new LinearRegression(0, .01, .01, iterations);
+				var iterations = 40;
+				var LRModel = new LinearRegression(0, .1, .25, iterations);
 
 				// train linear regression
 				LRModel.train(features, targets);
@@ -47,7 +47,7 @@
 				// buld google chart data array for cost function
 				var gradientDescentArray = [['Iterations', 'Theta']];
 				for (var i=1; i<iterations; i++) {
-					gradientDescentArray.push( [ i, LRModel.theta_history[i][1] ] );
+					gradientDescentArray.push( [ i, LRModel.theta_history[i] ] );
 				}
 
 				// create google chart for cost function scatter plot
