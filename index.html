@@ -1,11 +1,17 @@
 <html>
 	<head>
-		<script type="text/javascript" src="LinearRegression.js"></script>
-		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
 
 		<style type="text/css">
-			.chart { float: left; }
+		body {
+			padding-top: 40px;
+			padding-bottom: 40px;
+			background-color: #eee;
+		}
 		</style>
+
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript" src="LinearRegression.js"></script>
 
 		<script type="text/javascript">
 			// Load the Visualization API and the piechart package.
@@ -21,9 +27,17 @@
 					9, 15, 24, 360, 300, 270, 21, 30, 12
 				];
 
+				var cv_features = [
+					[0, 1], [0, .3], [0, .5], [0, 2], [0, 9], 
+					[0, 30], [0, 40], [0, 50], [0, 60], [0, 80]
+				];
+				var cv_targets = [
+					3, .9, 1.5, 6, 27, 90, 120, 150, 180, 240
+				];
+
 				// theta0, theta1, alpha, iterations
-				var iterations = 40;
-				var LRModel = new LinearRegression(0, .1, .25, iterations);
+				var iterations = 50;
+				var LRModel = new LinearRegression(0, .1, .01, iterations);
 
 				// train linear regression
 				LRModel.train(features, targets);
@@ -36,28 +50,20 @@
 
 				// create google chart for cost function scatter plot
 				var data = google.visualization.arrayToDataTable(costDataArray);
-				var options = {curveType: "function", title:'Cost Function', width:600, height:300};
+				var options = {curveType: "function", title:'', width:'100%', height:300};
 				var chart = new google.visualization.ScatterChart(document.getElementById('chart_cost'));
 				chart.draw(data, options);
 
-				// create google chart for cost function line graph
-				var chart = new google.visualization.LineChart(document.getElementById('chart_cost_line'));
-				chart.draw(data, options);
-
 				// buld google chart data array for cost function
-				var gradientDescentArray = [['Iterations', 'Theta']];
-				for (var i=1; i<iterations; i++) {
+				var gradientDescentArray = [['Iterations', 'Cost At Iteration']];
+				for (var i=1; i<iterations+1; i++) {
 					gradientDescentArray.push( [ i, LRModel.theta_history[i] ] );
 				}
 
 				// create google chart for cost function scatter plot
 				var data = google.visualization.arrayToDataTable(gradientDescentArray);
-				var options = {curveType: "function", title:'Gradient Descent', width:600, height:300};
+				var options = {curveType: "function", title:'', width:'100%', height:300};
 				var chart = new google.visualization.ScatterChart(document.getElementById('chart_gd'));
-				chart.draw(data, options);
-
-				// create google chart for cost function line graph
-				var chart = new google.visualization.LineChart(document.getElementById('chart_gd_line'));
 				chart.draw(data, options);
 
 				// create google chart data array for hypothesis function
@@ -70,30 +76,101 @@
 					dataArray.push( [x, y, hypothesis] );
 				}
 
-				// create google chart for price v prediction scatter plot
+				// create google chart for price v hypothesis line graph
 				var data = google.visualization.arrayToDataTable(dataArray);
-				var options = {'title':'Linear Regression', 'width':600, 'height':300};
-				var chart = new google.visualization.ScatterChart(document.getElementById('chart_lr'));
+				var options = {'title':'', 'width':'100%', 'height':300};
+				var chart = new google.visualization.LineChart(document.getElementById('chart_lr_line'));
 				chart.draw(data, options);
 
-				// create google chart for price v prediction line graph
-				var chart = new google.visualization.LineChart(document.getElementById('chart_lr_line'));
+				var predictionArray  = [['Features', 'Prediction', 'True Value']];
+				for (var i=0; i<cv_features.length; i++)
+				{
+					var prediction = LRModel.predict(cv_features[i]);
+					predictionArray.push( [cv_features[i][1], prediction, cv_targets[i]] );
+				}
+
+				// create google chart for prediction v true value scatter plot
+				var data = google.visualization.arrayToDataTable(predictionArray);
+				var options = {'title':'', 'width':'100%', 'height':300};
+				var chart = new google.visualization.ScatterChart(document.getElementById('chart_lr_prediction'));
 				chart.draw(data, options);
 			}
 		</script>
 	</head>
 
 	<body onLoad="initialize()">
-		<div class="chart" id="chart_cost"></div>
-		<div class="chart" id="chart_cost_line"></div>
-		<br style="clear: both;" />
-		<div class="chart" id="chart_gd"></div>
-		<div class="chart" id="chart_gd_line"></div>
-		<br style="clear: both;" />
-		<div class="chart" id="chart_lr"></div>
-		<div class="chart" id="chart_lr_line"></div>
-		<br style="clear: both;" />
-		<div class="chart" id="chart_lr_prediction"></div>
-		<div class="chart" id="chart_lr_prediction_line"></div>
+		<div class="container">
+			<div class="col-md-12">
+				<div class="row">
+					<div class="col-md-6 table-container">
+						<table class="table table-striped">
+							<thead>
+								<th>Cost Function</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Theta0</td>
+									<td>Theta1</td>
+									<td>Cost</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6" id="chart_cost"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 table-container">
+						<table class="table table-striped">
+							<thead>
+								<th>Gradient Descent</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Size of House</td>
+									<td>Hypothesis</td>
+									<td>Actual Price</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6" id="chart_gd"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 table-container">
+						<table class="table table-striped">
+							<thead>
+								<th>Linear Regression Hypothesis</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Size of House</td>
+									<td>Hypothesis</td>
+									<td>Actual Price</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6" id="chart_lr_line"></div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 table-container">
+						<table class="table table-striped">
+							<thead>
+								<th>Linear Regression Cross Validation</th>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Size of House</td>
+									<td>Prediction</td>
+									<td>Actual Price</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="col-md-6" id="chart_lr_prediction"></div>
+				</div>
+			</div>
+		</div>
+
 	</body>
 </html>

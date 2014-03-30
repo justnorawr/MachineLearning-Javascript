@@ -47,7 +47,7 @@ function LinearRegression (theta, theta1, alpha, iterations) {
 		this.buildTheta(X.length);
 
 		// compute one step of gradient descent for each iteration
-		for (var i=1; i<this.iterations; i++) {
+		for (var i=1; i<this.iterations+1; i++) {
 
 			// this will hold theta values for each feature at each step
 			var temp = [];
