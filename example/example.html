@@ -1,0 +1,92 @@
+<html ng-app="LRApp">
+	<head>
+		<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
+		<style type="text/css">
+		body {
+			background-color: #eee;
+		}
+		.table-container {
+			height: 300px;
+			overflow: auto;
+		}
+		</style>
+
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			// Load the Visualization API and the piechart package.
+			google.load('visualization', '1.0', {'packages':['corechart']});
+		</script>
+		<script type="text/javascript" src="../LinearRegression.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<script type="text/javascript" src="example.js"></script>
+	</head>
+
+	<body ng-controller="ExampleController" ng-init="init()">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-6" id="chart_cost"></div>
+						<div class="col-md-6" id="chart_gd"></div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="row">
+						<div class="col-md-12 table-container">
+							<table class="table table-striped">
+								<thead>
+									<th colspan="3">Training Data</th>
+								</thead>
+								<thead>
+									<th>Size of House</th>
+									<th>Hypothesis</th>
+									<th>Sell Price</th>
+									<th>Error</th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in features track by $index">
+										<td>{{ item[1]*1000|number }} sq ft</td>
+										<td>{{ LRModel.hypothesis[$index]*1000|currency:'$' }}</td>
+										<td>{{ targets[$index]*1000|currency:'$' }}</td>
+										<td>{{ (item[2]-item[1])*1000|number }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 table-container">
+							<table class="table table-striped">
+								<thead>
+									<th colspan="3">Cross Validation Data</th>
+								</thead>
+								<thead>
+									<th>Size of House</th>
+									<th>Prediction</th>
+									<th>Sell Price</th>
+									<th>Error</th>
+								</thead>
+								<tbody>
+									<tr ng-repeat="item in predictionHistory">
+										<td>{{ item[0]*1000|number }} sq ft</td>
+										<td>{{ item[1]*1000|currency:'$' }}</td>
+										<td>{{ item[2]*1000|currency:'$' }}</td>
+										<td>{{ (item[2]-item[1])*1000|number }}</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="row">
+						<div class="col-md-12" id="chart_lr_line"></div>
+					</div>
+					<div class="row">
+						<div class="col-md-12" id="chart_lr_prediction"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
