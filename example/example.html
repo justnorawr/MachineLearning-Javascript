@@ -3,9 +3,12 @@
 		<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
 		<style type="text/css">
 		body {
-			background-color: #eee;
+			margin-top: 10px;
 		}
-		.table-container {
+		.container {
+			padding: 10px;
+		}
+		.table-container .well {
 			height: 300px;
 			overflow: auto;
 		}
@@ -24,67 +27,91 @@
 	<body ng-controller="ExampleController" ng-init="init()">
 		<div class="container">
 			<div class="row">
+				<div class="col-md-4">
+					<div class="well">
+						<div class="form-group">
+							<label class="control-label">Iterations</label>
+							<input ng-model="iterations" class="form-control" type="number" min="2" value="{{ iterations }}">
+						</div>
+						<div class="form-group">
+							<label class="control-label">Alpha</label>
+							<input ng-model="alpha" class="form-control" type="number" value="{{ alpha }}">
+						</div>
+						<div class="form-group">
+							<label class="control-label">Theta</label>
+							<input ng-model="theta" class="form-control" type="number" value="{{ theta }}">
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="well" id="chart_cost"></div>
+						</div>
+						<div class="col-md-6">
+							<div class="well" id="chart_gd"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-12">
 					<div class="row">
-						<div class="col-md-6" id="chart_cost"></div>
-						<div class="col-md-6" id="chart_gd"></div>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="row">
-						<div class="col-md-12 table-container">
-							<table class="table table-striped">
-								<thead>
-									<th colspan="3">Training Data</th>
-								</thead>
-								<thead>
-									<th>Size of House</th>
-									<th>Hypothesis</th>
-									<th>Sell Price</th>
-									<th>Error</th>
-								</thead>
-								<tbody>
-									<tr ng-repeat="item in features track by $index">
-										<td>{{ item[1]*1000|number }} sq ft</td>
-										<td>{{ LRModel.hypothesis[$index]*1000|currency:'$' }}</td>
-										<td>{{ targets[$index]*1000|currency:'$' }}</td>
-										<td>{{ (item[2]-item[1])*1000|number }}</td>
-									</tr>
-								</tbody>
-							</table>
+						<div class="col-md-6 table-container">
+							<div class="well">
+								<table class="table table-striped">
+									<thead>
+										<th colspan="3">Training Data</th>
+									</thead>
+									<thead>
+										<th>Size of House</th>
+										<th>Hypothesis</th>
+										<th>Sell Price</th>
+										<th>Error</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in features track by $index">
+											<td>{{ item[1]*1000|number }} sq ft</td>
+											<td>{{ LRModel.hypothesis[$index]*1000|currency:'$' }}</td>
+											<td>{{ targets[$index]*1000|currency:'$' }}</td>
+											<td>{{ (targets[$index]-LRModel.hypothesis[$index])*1000|number }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12 table-container">
-							<table class="table table-striped">
-								<thead>
-									<th colspan="3">Cross Validation Data</th>
-								</thead>
-								<thead>
-									<th>Size of House</th>
-									<th>Prediction</th>
-									<th>Sell Price</th>
-									<th>Error</th>
-								</thead>
-								<tbody>
-									<tr ng-repeat="item in predictionHistory">
-										<td>{{ item[0]*1000|number }} sq ft</td>
-										<td>{{ item[1]*1000|currency:'$' }}</td>
-										<td>{{ item[2]*1000|currency:'$' }}</td>
-										<td>{{ (item[2]-item[1])*1000|number }}</td>
-									</tr>
-								</tbody>
-							</table>
+						<div class="col-md-6 table-container">
+							<div class="well">
+								<table class="table table-striped">
+									<thead>
+										<th colspan="3">Cross Validation Data</th>
+									</thead>
+									<thead>
+										<th>Size of House</th>
+										<th>Prediction</th>
+										<th>Sell Price</th>
+										<th>Error</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in predictionHistory">
+											<td>{{ item[0]*1000|number }} sq ft</td>
+											<td>{{ item[1]*1000|currency:'$' }}</td>
+											<td>{{ item[2]*1000|currency:'$' }}</td>
+											<td>{{ (item[2]-item[1])*1000|number }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="row">
 				<div class="col-md-6">
-					<div class="row">
-						<div class="col-md-12" id="chart_lr_line"></div>
-					</div>
-					<div class="row">
-						<div class="col-md-12" id="chart_lr_prediction"></div>
-					</div>
+					<div class="well" id="chart_lr_line"></div>
+				</div>
+				<div class="col-md-6">
+					<div class="well" id="chart_lr_prediction"></div>
 				</div>
 			</div>
 		</div>

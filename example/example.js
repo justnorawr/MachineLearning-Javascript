@@ -18,17 +18,41 @@ LRApp.controller('ExampleController', function ($scope) {
 	];
 
 	$scope.init = function () {
+		$scope.iterations = 5;
+		$scope.theta = 0.01;
+		$scope.alpha = 0.001;
 
-		// theta0, theta1, alpha, iterations
-		var iterations = 100;
-		$scope.LRModel = new LinearRegression(0, .01, .025, iterations);
-
-		// train linear regression
+		$scope.LRModel = new LinearRegression(0, .01, .01, $scope.iterations);
 		$scope.LRModel.train($scope.features, $scope.targets);
+		$scope.buildGraphs();
+
+		$scope.$watch(function () { return $scope.iterations; }, function () {
+			$scope.retrain();
+			$scope.buildGraphs();
+		});
+
+		$scope.$watch(function () { return $scope.alpha; }, function () {
+			$scope.retrain();
+			$scope.buildGraphs();
+		});
+
+		$scope.$watch(function () { return $scope.theta; }, function () {
+			$scope.retrain();
+			$scope.buildGraphs();
+		});
+	};
+
+	$scope.retrain = function () {
+		$scope.LRModel = new LinearRegression(0, $scope.theta, $scope.alpha, $scope.iterations);
+		$scope.LRModel.train($scope.features, $scope.targets);
+	};
+
+	$scope.buildGraphs = function () {
 
 		// buld google chart data array for cost function
 		var costDataArray = [['Theta', 'Cost']];
-		for (var i=-50; i<50; i+=3) {
+		for (var i=-50; i<50; i+=3)
+		{
 			costDataArray.push( [i, $scope.LRModel.computeCost([0, i], $scope.features[5], $scope.targets[5])] );
 		}
 
@@ -40,6 +64,7 @@ LRApp.controller('ExampleController', function ($scope) {
 
 		// buld google chart data array for cost function
 		var gradientDescentArray = [['Iterations', 'Cost At Iteration']];
+		var iterations = $scope.iterations;
 		for (var i=1; i<iterations+1; i++) {
 			gradientDescentArray.push( [ i, $scope.LRModel.theta_history[i] ] );
 		}
