@@ -1,0 +1,123 @@
+<html ng-app="LRApp">
+	<head>
+		<link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" >
+		<link rel="stylesheet" type="text/css" href="../global.css">
+
+		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+		<script type="text/javascript">
+			// Load the Visualization API and the piechart package.
+			google.load('visualization', '1.0', {'packages':['corechart']});
+		</script>
+		<script type="text/javascript" src="../../lib/main.js"></script>
+		<script type="text/javascript" src="../../lib/classification/LogisticRegression.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.min.js"></script>
+		<script type="text/javascript" src="logistic-regression.js"></script>
+	</head>
+
+	<body ng-controller="ExampleController" ng-init="init()">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="well">
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group">
+									<label class="control-label">Iterations</label>
+									<input ng-model="iterations" class="form-control" type="number" min="2" value="{{ iterations }}">
+								</div>
+								<div class="form-group">
+									<label class="control-label">Alpha</label>
+									<input ng-model="alpha" class="form-control" type="number" value="{{ alpha }}">
+								</div>
+								<div class="form-group">
+									<label class="control-label">Theta</label>
+									<input ng-model="theta" class="form-control" value="{{ theta }}">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">Cost - Starting Theta</label>
+									<input ng-model="cost_start" class="form-control" type="number" value="{{ cost_start }}">
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="form-group">
+									<label class="control-label">Cost - Iterations</label>
+									<input ng-model="cost_iterations" class="form-control" type="number" value="{{ cost_iterations }}">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="well" id="chart_cost"></div>
+						</div>
+						<div class="col-md-6">
+							<div class="well" id="chart_gd"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-6 table-container">
+							<div class="well">
+								<h4>Training Data</h4>
+								<table class="table table-striped">
+									<thead>
+										<th>Sepal Length</th>
+										<th>Sepal Width</th>
+										<th>Petal Length</th>
+										<th>Petal Width</th>
+										<th>Prediction</th>
+										<th>Type</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in trainingData">
+											<td>{{ item[0] }}</td>
+											<td>{{ item[1] }}</td>
+											<td>{{ item[2] }}</td>
+											<td>{{ item[3] }}</td>
+											<td>{{ item[4] }}</td>
+											<td>{{ item[5] }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div class="col-md-6 table-container">
+							<div class="well">
+								<h4>Cross Validation Data</h4>
+								<table class="table table-striped">
+									<thead>
+										<th>Sepal Length</th>
+										<th>Sepal Width</th>
+										<th>Petal Length</th>
+										<th>Petal Width</th>
+										<th>Prediction</th>
+										<th>Type</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="item in validationData">
+											<td>{{ item[0] }}</td>
+											<td>{{ item[1] }}</td>
+											<td>{{ item[2] }}</td>
+											<td>{{ item[3] }}</td>
+											<td>{{ item[4] }}</td>
+											<td>{{ item[5] }}</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

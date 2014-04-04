@@ -1,0 +1,10 @@
+body {
+	margin-top: 10px;
+}
+.container {
+	padding: 10px;
+}
+.table-container .well {
+	height: 300px;
+	overflow: auto;
+}
